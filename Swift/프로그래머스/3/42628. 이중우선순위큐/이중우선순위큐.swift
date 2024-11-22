@@ -1,36 +1,49 @@
 import Foundation
 
-func solution(_ operations:[String]) -> [Int] {
-    var answer: [Int] = []
-    var heap: [Int] = []
+func solution(_ operations: [String]) -> [Int] {
+    var answer = [Int]()
     
-    for i in operations {
-        if i.first == "I" {
-            let value = Int(i.dropFirst().dropFirst())
-            heap.append(value ?? 0)
-            heap.sort(by: >)
-        } else {
-            let value = Int(i.dropFirst().dropFirst())
+    var maxHeap = [Int]()
+    var minHeap = [Int]()
+    var heapCount = 0
+    
+    for operation in operations {
+        let oder = operation.split(separator: " ")
+        let command = oder.first!
+        guard let value = Int(oder[1]) else {
+            continue
+        }
+        
+        if command == "I" {
+            maxHeap.append(value)
+            maxHeap.sort(by: >)
+
+            minHeap.append(value)
+            minHeap.sort()
+
+            heapCount += 1
+            continue
             
-            if value == 1 {
-                guard heap.count > 0 else {
-                    continue
-                }
-                heap.removeFirst()
-            } else {
-                guard heap.count > 0 else {
-                    continue
-                }
-                heap.removeLast()
+        } else {
+            if value == 1 && heapCount >= 1 {
+                maxHeap.removeFirst()
+                minHeap.removeLast()
+                heapCount -= 1
+                continue
+                
+            } else if value == -1 && heapCount >= 1 {
+                minHeap.removeFirst()
+                maxHeap.removeLast()
+                heapCount -= 1
+                continue
             }
         }
     }
     
-    if heap.isEmpty {
+    if heapCount <= 0 {
         answer = [0, 0]
     } else {
-        answer.append(heap.first!)
-        answer.append(heap.last!)
+        answer = [maxHeap.first!, minHeap.first!]
     }
     
     return answer
