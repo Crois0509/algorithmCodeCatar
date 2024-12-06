@@ -1,19 +1,19 @@
 import Foundation
 
-func solution(_ s: String) -> Bool {
-    var stack: [Character] = []
+func solution(_ s:String) -> Bool {
+    var answer :Bool = false
+    var count: Int = 0
     
     for char in s {
         if char == "(" {
-            stack.append(char)
-        } else if char == ")" {
-            if stack.isEmpty { // 닫는 괄호가 나왔지만 스택이 비어있다면 잘못된 순서
-                return false
-            }
-            stack.removeLast() // 스택에서 여는 괄호 제거
+            count += 1
+        } else {
+            count -= 1
         }
+        guard count >= 0 else { return false }
     }
+
+    if count == 0 { answer = true }
     
-    // 모든 괄호가 처리되었을 때 스택이 비어 있어야만 true
-    return stack.isEmpty
+    return answer
 }
