@@ -1,29 +1,31 @@
 import Foundation
 
-func solution(_ k:Int, _ dungeons:[[Int]]) -> Int {
-    var answer = 0
+func solution(_ k: Int, _ dungeons: [[Int]]) -> Int {
+    var answer: Int = 0
+    var figure = k
+    var startCount = 0
+    var dungenonsCheck: [Bool] = Array(repeating: false, count: dungeons.count)
     
-    var visited = Array(repeating: false, count: dungeons.count)
-    
-    func dfs(_ currentFatigue: Int, _ count: Int) {
+    func dfs(_ count: inout Int, _ currentFigure: inout Int) {
         answer = max(answer, count)
         
-        for i in dungeons.indices {
-            let minRequired = dungeons[i][0]
-            let fatigueCost = dungeons[i][1]
+        for (index, dungeon) in dungeons.enumerated() {
+            guard dungenonsCheck[index] == false else { continue }
+            guard currentFigure >= dungeon[0] else { continue }
             
-            if !visited[i] && currentFatigue >= minRequired {
-                visited[i] = true
-                
-                dfs(currentFatigue - fatigueCost, count + 1)
-                visited[i] = false
-            } else {
-                continue
-            }
+            count += 1
+            currentFigure -= dungeon[1]
+            dungenonsCheck[index] = true
+            
+            dfs(&count, &currentFigure)
+            
+            dungenonsCheck[index] = false
+            count -= 1
+            currentFigure += dungeon[1]
         }
     }
     
-    dfs(k, 0)
+    dfs(&startCount, &figure)
     
     return answer
 }
