@@ -1,29 +1,17 @@
 import Foundation
 
-func solution(_ brown:Int, _ yellow:Int) -> [Int] {
-    var answer: [Int] = []
+func solution(_ brown: Int, _ yellow: Int) -> [Int] {
+    let total = brown + yellow
     
-    var height: Int = 1
-    
-    while true {
-        let centerY = yellow / height
-        guard centerY * height == yellow else {
-            height += 1
-            continue
-        }
+    for height in 3...total {
+        if total % height != 0 { continue }
         
-        let horizontal = centerY + 2
-        let vertical = height
+        let width = total / height
         
-        if (horizontal * 2) + (vertical * 2) == brown {
-            answer.append(horizontal)
-            answer.append(vertical + 2)
-            break
-        } else {
-            height += 1
-            continue
+        if (width - 2) * (height - 2) == yellow {
+            return [width, height]
         }
     }
     
-    return answer
+    return []
 }
