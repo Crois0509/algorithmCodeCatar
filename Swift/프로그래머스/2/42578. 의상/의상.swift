@@ -1,20 +1,18 @@
 import Foundation
 
-import Foundation
-
 func solution(_ clothes:[[String]]) -> Int {
-    var answer = 0
-    var clothesDic: [String: Int] = [:]
+    var dic: [String:[String]] = [:]
+    var answer: Int = 1
     
-    for i in clothes where i.count >= 2 {
-        if let value = i.last {
-            clothesDic[value, default: 0] += 1
-        }
+    for i in clothes {
+        let category = i.last ?? ""
+        let clothe = i.dropLast()
+        dic[category, default: []].append(contentsOf: clothe)
     }
     
-    let totalCombinations = clothesDic.values.reduce(1) { $0 * ($1 + 1) }
+    for j in dic.values {
+        answer *= (j.count + 1)
+    }
     
-    answer = totalCombinations - 1
-        
-    return answer
+    return answer - 1
 }
