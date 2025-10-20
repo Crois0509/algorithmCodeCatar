@@ -1,18 +1,16 @@
 import Foundation
 
 func solution(_ clothes:[[String]]) -> Int {
-    var dic: [String:[String]] = [:]
-    var answer: Int = 1
+    var clothDic: [String:Int] = [:]
+    var answer: Int = 0
     
-    for i in clothes {
-        let category = i.last ?? ""
-        let clothe = i.dropLast()
-        dic[category, default: []].append(contentsOf: clothe)
+    for cloth in clothes {
+        let category = cloth[1]        
+        clothDic[category, default: 0] += 1
     }
     
-    for j in dic.values {
-        answer *= (j.count + 1)
-    }
+    let total = clothDic.values.reduce(1) { $0 * ($1 + 1) }
+    answer = total - 1
     
-    return answer - 1
+    return answer
 }
