@@ -1,10 +1,11 @@
 import Foundation
 
+import Foundation
+
 func solution(_ begin:String, _ target:String, _ words:[String]) -> Int {
     guard words.contains(target) else { return 0 } // target이 없을 경우 0 반환 후 종료
     guard begin != target else { return 0 }
     
-    var answer: Int = 0
     var chars: Set<String> = []
     
     var result: String = begin
@@ -28,7 +29,5 @@ func solution(_ begin:String, _ target:String, _ words:[String]) -> Int {
         }
     }
     
-    answer = index
-    
-    return answer
+    return index
 }
