@@ -1,38 +1,34 @@
 import Foundation
 
 func solution(_ n:Int, _ edge:[[Int]]) -> Int {
-    var answer: Int = 0
-    var graph = [[Int]](repeating: [], count: n + 1)
+    var nodes: [Int:Set<Int>] = [:]
+    var queue: [Int] = []
+    var depth: Int = 0
+    var visited = Array(repeating: false, count: n + 1)
+    visited[1] = true
+    queue = [1]
     
-    for nodes in edge {
-        let firstNode = nodes[0]
-        let secondNode = nodes[1]
+    for node in edge {
+        let firstNode = node[0]
+        let secondNode = node[1]
         
-        // 노드 양방향 연결
-        graph[firstNode].append(secondNode)
-        graph[secondNode].append(firstNode)
+        nodes[firstNode, default: []].insert(secondNode)
+        nodes[secondNode, default: []].insert(firstNode)
     }
     
-    var distance = [Int](repeating: 0, count: n + 1)
-    distance[1] = 1
-    
-    var needVisitQueue: [Int] = [1]
-    var index = 0
-    
-    while index < needVisitQueue.count {
-        let currentNode = needVisitQueue[index]
-        index += 1
+    while !queue.isEmpty {
+        depth = queue.count
         
-        for node in graph[currentNode] {
-            if distance[node] == 0 {
-                distance[node] = distance[currentNode] + 1
-                needVisitQueue.append(node)
+        for _ in 0..<depth {
+            let node = queue.removeFirst()
+            
+            guard let nextNodes = nodes[node] else { continue }
+            for next in nextNodes where !visited[next] {
+                visited[next] = true
+                queue.append(next)
             }
         }
     }
     
-    let maxDistance = distance.max() ?? 0
-    answer = distance.filter { $0 == maxDistance }.count
-    
-    return answer
+    return depth
 }
