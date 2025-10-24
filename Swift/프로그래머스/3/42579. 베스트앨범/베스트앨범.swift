@@ -1,28 +1,27 @@
 import Foundation
 
 func solution(_ genres:[String], _ plays:[Int]) -> [Int] {
-    var played = [String: Int]()
-    var music = [String: [(n: Int, play: Int)]]()
-    var answer = [Int]()
+    var playList: [String: [(i: Int, play: Int)]] = [:]
+    var genreList: [String:Int] = [:]
+    var answer: [Int] = []
     
     for i in genres.indices {
         let genre = genres[i]
         let play = plays[i]
         
-        played[genre, default: 0] += play
-        music[genre, default: []].append((i, play))
+        playList[genre, default: []].append((i, play))
+        genreList[genre, default: 0] += play
+        
+        playList[genre]?.sort(by: { $0.play > $1.play })
     }
     
-    for (genre, _) in played.sorted(by: { $0.value > $1.value }) {
-        let albums = music[genre]!.sorted {
-            if $0.play == $1.play {
-                return $0.n < $1.n
-            }
-            return $0.play > $1.play
-        }.prefix(2)
+    for album in genreList.sorted(by: { $0.value > $1.value }) {
+        let list = playList[album.key]!
         
-        for album in albums {
-            answer.append(album.n)
+        if list.count < 2 {
+            answer.append(list.first!.i)
+        } else {
+            answer.append(contentsOf: [list[0].i, list[1].i])
         }
     }
     
