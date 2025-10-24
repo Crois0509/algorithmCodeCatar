@@ -1,50 +1,30 @@
 import Foundation
 
-func solution(_ operations: [String]) -> [Int] {
-    var answer = [Int]()
+func solution(_ operations:[String]) -> [Int] {
+    var queue: [Int] = []
     
-    var maxHeap = [Int]()
-    var minHeap = [Int]()
-    var heapCount = 0
-    
-    for operation in operations {
-        let oder = operation.split(separator: " ")
-        let command = oder.first!
-        guard let value = Int(oder[1]) else {
-            continue
-        }
+    for op in operations {
+        let replacing = op.split(separator: " ")
+        let operation = replacing[0]
+        let num = Int(replacing[1]) ?? 0
         
-        if command == "I" {
-            maxHeap.append(value)
-            maxHeap.sort(by: >)
-
-            minHeap.append(value)
-            minHeap.sort()
-
-            heapCount += 1
-            continue
-            
-        } else {
-            if value == 1 && heapCount >= 1 {
-                maxHeap.removeFirst()
-                minHeap.removeLast()
-                heapCount -= 1
-                continue
-                
-            } else if value == -1 && heapCount >= 1 {
-                minHeap.removeFirst()
-                maxHeap.removeLast()
-                heapCount -= 1
-                continue
+        if operation == "I" {
+            queue.append(num)
+        } else if operation == "D" {
+            guard !queue.isEmpty else { continue }
+            if num == 1 {
+                let maxIndex = queue.firstIndex(of: queue.max() ?? 0)
+                queue.remove(at: maxIndex ?? 0)
+            } else {
+                let minIndex = queue.firstIndex(of: queue.min() ?? 0)
+                queue.remove(at: minIndex ?? 0)
             }
         }
     }
     
-    if heapCount <= 0 {
-        answer = [0, 0]
+    if queue.isEmpty {
+        return [0, 0]
     } else {
-        answer = [maxHeap.first!, minHeap.first!]
+        return [queue.max()!, queue.min()!]
     }
-    
-    return answer
 }
