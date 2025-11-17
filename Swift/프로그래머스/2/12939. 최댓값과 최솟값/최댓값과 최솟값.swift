@@ -1,4 +1,6 @@
 func solution(_ s:String) -> String {
-    let str = s.split(separator: " ").map { Int($0) ?? 0 }
-    return "\(str.min()!) \(str.max()!)"
+    let split = s.split(separator: " ").compactMap { Int($0) }
+    let max = split.max() ?? 0
+    let min = split.min() ?? 0
+    return "\(min) \(max)"
 }
