@@ -1,10 +1,22 @@
+import Foundation
+
 func solution(_ s:String) -> String {
-    return s
-        .lowercased()
-        .split(separator: " ", omittingEmptySubsequences: false)
-        .map { word in
-            guard let first = word.first else { return "" }
-            return first.uppercased() + word.dropFirst()
+    var result = ""
+    var isFirst = true
+    
+    for ch in s {
+        if ch == " " {
+            result.append(" ")
+            isFirst = true
+        } else {
+            if isFirst {
+                result.append(ch.uppercased())
+                isFirst = false
+            } else {
+                result.append(ch.lowercased())
+            }
         }
-        .joined(separator: " ")
+    }
+    
+    return result
 }
