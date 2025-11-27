@@ -1,38 +1,28 @@
 import Foundation
 
-func solution(_ s:String) -> Int {
-    
-    func isValid(_ chars: [Character]) -> Bool {
+func solution(_ s: String) -> Int {
+    let brackets: [Character: Character] = [")": "(", "]": "[", "}": "{"]
+    var answer = 0
+    let arr = Array(s)
+
+    func isValid(_ str: [Character]) -> Bool {
         var stack: [Character] = []
-        
-        for ch in chars {
+
+        for ch in str {
             if ch == "(" || ch == "[" || ch == "{" {
                 stack.append(ch)
             } else {
-                guard let last = stack.last else { return false }
-                if (ch == ")" && last == "(") ||
-                    (ch == "]" && last == "[") ||
-                    (ch == "}" && last == "{") {
-                    stack.removeLast()
-                } else {
-                    return false
-                }
+                if stack.isEmpty { return false }
+                if stack.removeLast() != brackets[ch] { return false }
             }
         }
-        
         return stack.isEmpty
     }
-    
-    let sArray = Array(s)
-    let n = sArray.count
-    var count = 0
-    
-    for i in 0..<n {
-        let rotated = Array(sArray[i..<n] + sArray[0..<i])
-        if isValid(rotated) {
-            count += 1
-        }
+
+    for i in 0..<arr.count {
+        let rotated = Array(arr[i...] + arr[..<i])
+        if isValid(rotated) { answer += 1 }
     }
-    
-    return count
+
+    return answer
 }
