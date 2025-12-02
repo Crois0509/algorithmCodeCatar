@@ -1,13 +1,13 @@
 import Foundation
 
-func solution(_ citations: [Int]) -> Int {
-    let sorted = citations.sorted(by: >) // 내림차순 정렬
+func solution(_ citations:[Int]) -> Int {
+    let sorted = citations.sorted(by: >)
     
-    for (index, citation) in sorted.enumerated() {
-        if index + 1 > citation {
-            return index
+    for (i, c) in sorted.enumerated() {
+        if c <= i {
+            return i
         }
     }
     
-    return citations.count
+    return sorted.count
 }
