@@ -1,38 +1,38 @@
 import Foundation
 
-func solution(_ queue1:[Int], _ queue2:[Int]) -> Int {
-    let total = queue1.reduce(0, +) + queue2.reduce(0, +)
-    
-    guard total % 2 == 0 else { return -1 }
-    
+func solution(_ queue1: [Int], _ queue2: [Int]) -> Int {
+    let sum1 = queue1.reduce(0, +)
+    let sum2 = queue2.reduce(0, +)
+    let total = sum1 + sum2
+
+    // 전체 합이 홀수면 불가능
+    if total % 2 != 0 { return -1 }
+
     let target = total / 2
-    var answer: Int = 0
     let queue = queue1 + queue2
+
     var startIndex = 0
     var endIndex = queue1.count - 1
-    var sum = queue[startIndex...endIndex].reduce(0, +)
-    var count: Int = 0
-        
-    while sum != target {
-        guard
-            count < (queue1.count + queue2.count) * 2,
-            startIndex < endIndex,
-            endIndex < queue.count - 1,
-            sum != 0
-        else { return -1 }
-        
-        if sum > target {
-            sum -= queue[startIndex]
+    var currentSum = sum1
+    var count = 0
+
+    // 모든 원소가 두 번 이상 이동하면 의미 없음
+    let limit = queue.count * 2
+
+    while currentSum != target {
+        if count > limit { return -1 }
+
+        if currentSum > target {
+            currentSum -= queue[startIndex]
             startIndex += 1
-            
         } else {
             endIndex += 1
-            sum += queue[endIndex]
+            if endIndex >= queue.count { return -1 }
+            currentSum += queue[endIndex]
         }
-        
-        answer += 1
+
         count += 1
     }
-    
-    return answer
+
+    return count
 }
