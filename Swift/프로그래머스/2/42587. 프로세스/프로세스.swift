@@ -1,22 +1,25 @@
 import Foundation
 
 func solution(_ priorities:[Int], _ location:Int) -> Int {
-    var queue: [(index: Int, priority: Int)] = priorities.enumerated().map { ($0.offset, $0.element) }
-    var count = 0
-
+    let target = (priorities[location], location)
+    var queue: [(num: Int, location: Int)] = priorities.enumerated().map { ($1, $0) }
+    var visit = [Bool](repeating: false, count: queue.count)
+    
     while !queue.isEmpty {
-        let first = queue.removeFirst()
+        let current = queue.removeFirst()
         
-        if queue.contains(where: { $0.priority > first.priority }) {
-            // 뒤에 더 높은 우선순위가 있으면 다시 뒤로 보냄
-            queue.append(first)
+        if queue.contains(where: { $0.num > current.num }) {
+            queue.append(current)
+            continue
+            
         } else {
-            // 실행됨
-            count += 1
-            if first.index == location {
-                return count
+            visit[current.location] = true
+            
+            if current == target {
+                return visit.filter { $0 }.count
             }
         }
     }
-    return count
+    
+    return 0
 }
