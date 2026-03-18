@@ -1,42 +1,57 @@
+import Foundation
+
+struct File {
+    let head: String
+    let number: String
+    let tail: String
+    let index: Int
+}
+
 func solution(_ files:[String]) -> [String] {
-    var parsed: [(head: String, number: Int, index: Int, original: String)] = []
+    var sortedFiles: [File] = []
     
-    for (idx, file) in files.enumerated() {
+    for (i, file) in files.enumerated() {
         var head = ""
-        var number = ""
-        var i = file.startIndex
+        var num = ""
+        var tail = ""
         
-        // HEAD
-        while i < file.endIndex, !file[i].isNumber {
-            head.append(file[i])
-            i = file.index(after: i)
+        for char in file {
+            let text = String(char)
+            
+            if char.isNumber {
+                if num.count >= 5 || !tail.isEmpty {
+                    tail += text
+                    
+                } else {
+                    num += text
+                }
+                
+            } else if !char.isNumber {
+                if !num.isEmpty {
+                    tail += text
+                    
+                } else {
+                    head += text
+                }
+            }
         }
         
-        // NUMBER (최대 5자리)
-        var count = 0
-        while i < file.endIndex, file[i].isNumber, count < 5 {
-            number.append(file[i])
-            i = file.index(after: i)
-            count += 1
-        }
-        
-        parsed.append((
-            head: head.lowercased(),
-            number: Int(number)!,
-            index: idx,
-            original: file
-        ))
+        let newFile = File(head: head, number: num, tail: tail, index: i)
+        sortedFiles.append(newFile)
     }
     
-    return parsed
-        .sorted {
-            if $0.head != $1.head {
-                return $0.head < $1.head
-            }
-            if $0.number != $1.number {
-                return $0.number < $1.number
-            }
-            return $0.index < $1.index   // 안정 정렬
+    return sortedFiles.sorted(by: {
+        if $0.head.lowercased() != $1.head.lowercased() {
+            return $0.head.lowercased() < $1.head.lowercased()
+            
+        } else if let first = Int($0.number), let second = Int($1.number) {
+            return first < second
+            
+        } else {
+            return $0.index < $1.index
         }
-        .map { $0.original }
+    })
+    .map {
+        "\($0.head)\($0.number)\($0.tail)"
+    }
 }
