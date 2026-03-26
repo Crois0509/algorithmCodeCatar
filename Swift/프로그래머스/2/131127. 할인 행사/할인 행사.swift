@@ -2,37 +2,36 @@ import Foundation
 
 func solution(_ want:[String], _ number:[Int], _ discount:[String]) -> Int {
     
-    var wantDic: [String: Int] = [:]
-    var index: Int = 0
-    var answer: Int = 0
-    
-    for j in want {
-        if !discount.contains(j) {
-            return 0
-        }
-    }
+    var dic: [String:Int] = [:]
     
     for i in 0..<want.count {
-        wantDic[want[i], default: 0] = number[i]
+        let product = want[i]
+        let count = number[i]
+        
+        dic[product] = count
     }
     
-    while (index + 9) < discount.count {
-        var dic: [String: Int] = [:]
+    var index = 0
+    var answer = 0
+    
+    while index + 9 < discount.count {
+        let maxIndex = index + 9
+        var currentDic = dic
         
-        for i in index...(index + 9) {
-            dic[discount[i], default: 0] += 1
+        for j in index...maxIndex {
+            let product = discount[j]
+            
+            if let count = currentDic[product] {
+                if count - 1 <= 0 {
+                    currentDic.removeValue(forKey: product)
+                } else {
+                    currentDic[product] = count - 1
+                }
+            }
         }
         
-        for (i, w) in want.enumerated() {
-            if dic[w] == wantDic[w] {
-                if i == (want.count - 1) {
-                    answer += 1
-                    break
-                }
-                continue
-            } else {
-                break
-            }
+        if currentDic.isEmpty {
+            answer += 1
         }
         
         index += 1
