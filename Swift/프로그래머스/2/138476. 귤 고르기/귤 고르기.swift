@@ -1,23 +1,23 @@
 import Foundation
 
 func solution(_ k:Int, _ tangerine:[Int]) -> Int {
-    var answer: Int = 0
-    var count = k
+    
     var dic = [Int:Int]()
     
-    for i in tangerine {
-        dic[i, default: 0] += 1
+    // 귤 크기별 저장
+    for t in tangerine {
+        dic[t, default: 0] += 1
     }
     
+    // 수량별로 정렬
     var sortedDic = dic.sorted(by: { $0.value > $1.value })
     
-    while count > 0 {
+    var current = 0
+    var answer = 0
+    
+    while current < k {
         answer += 1
-        
-        if let max = sortedDic.first {
-            count -= max.value
-            sortedDic.removeFirst()
-        }
+        current += sortedDic.removeFirst().value
     }
     
     return answer
