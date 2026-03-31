@@ -1,11 +1,13 @@
 import Foundation
 
-func solution(_ n:Int, _ left: Int64, _ right: Int64) -> [Int] {
-    var result: [Int] = []
+func solution(_ n:Int, _ left:Int64, _ right:Int64) -> [Int] {
+    let left = Int(left)
+    let right = Int(right)
+    var result = [Int]()
     
     for idx in left...right {
-        let row = Int(idx / Int64(n))
-        let col = Int(idx % Int64(n))
+        let row = idx / n
+        let col = idx % n
         result.append(max(row, col) + 1)
     }
     
