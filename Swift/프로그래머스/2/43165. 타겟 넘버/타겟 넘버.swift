@@ -2,21 +2,20 @@ import Foundation
 
 func solution(_ numbers:[Int], _ target:Int) -> Int {
     
-    var answer: Int = 0
+    var answer = 0
     
-    func dfs(num: Int, index: Int) {
-        if index == numbers.count - 1 {
-            answer += num == target ? 1 : 0
-            
-        } else {
-            let next = index + 1
-            dfs(num: num + numbers[next], index: next)
-            dfs(num: num - numbers[next], index: next)
+    func dfs(_ index: Int, _ current: Int) {
+        guard index < numbers.count else {
+            answer += current == target ? 1 : 0
+            return
         }
+        
+        let num = numbers[index]
+        dfs(index + 1, current + num)
+        dfs(index + 1, current - num)
     }
     
-    dfs(num: numbers[0], index: 0)
-    dfs(num: -numbers[0], index: 0)
+    dfs(0, 0)
     
     return answer
 }
