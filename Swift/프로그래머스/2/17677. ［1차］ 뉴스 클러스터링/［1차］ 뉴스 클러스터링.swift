@@ -1,43 +1,47 @@
 func solution(_ str1:String, _ str2:String) -> Int {
-    
-    func makeMultiSet(_ s: String) -> [String: Int] {
-        let arr = Array(s.lowercased())
-        var dict: [String: Int] = [:]
-
-        for i in 0..<arr.count-1 {
-            let a = arr[i]
-            let b = arr[i+1]
-
-            // 두 문자 모두 알파벳인지 체크
-            if a.isLetter && b.isLetter {
-                let key = "\(a)\(b)"
-                dict[key, default: 0] += 1
+        
+    func makeBigrams(from text: String) -> [String] {
+        let words = Array(text.lowercased())
+        var result = [String]()
+        
+        for i in 0..<words.count - 1 {
+            let char1 = words[i]
+            let char2 = words[i + 1]
+        
+            if !char1.isLetter || !char2.isLetter {
+                continue
+            
+            } else {
+                let word = "\(char1)\(char2)"
+                result.append(word)
             }
         }
-        return dict
+        
+        return result
     }
-
-    let A = makeMultiSet(str1)
-    let B = makeMultiSet(str2)
-
-    if A.isEmpty && B.isEmpty { return 65536 }
-
-    // 교집합
-    var inter = 0
-    for (key, value) in A {
-        if let bValue = B[key] {
-            inter += min(value, bValue)
+    
+    var first = makeBigrams(from: str1)
+    var second = makeBigrams(from: str2)
+    
+    let firstCount = first.count
+    let secondCount = second.count
+    
+    var duple = 0
+    
+    while !first.isEmpty {
+        let word = first.removeFirst()
+        
+        if let index = second.firstIndex(of: word) {
+            duple += 1
+            second.remove(at: index)
         }
     }
-
-    // 합집합
-    var union = 0
-    var keys = Set(A.keys).union(B.keys)
-    for key in keys {
-        let aValue = A[key] ?? 0
-        let bValue = B[key] ?? 0
-        union += max(aValue, bValue)
+    
+    let sum = firstCount + secondCount - duple
+    
+    if sum == 0 {
+        return 65536
+    } else {
+        return Int((Double(duple)/Double(sum)) * 65536)
     }
-
-    return Int(Double(inter) / Double(union) * 65536)
 }
